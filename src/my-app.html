@@ -111,7 +111,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display:none;
       }
 
-      .playerBar {
+      #playerBar {
         display:flex;
         align-items: center;
         justify-content: center;
@@ -125,7 +125,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color:#fff;
       }
 
-      .playerBar iron-image {
+      #playerBar .hidden {
+        opacity:1;
+      }
+
+      #playerBar iron-image {
         margin:0px 20px 0px 0px;
       }
 
@@ -153,7 +157,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         
         <paper-fab id="selectPlayer" icon="face" on-tap="_showSelectPlayerPopup"></paper-fab>
-        <div class="playerBar"><iron-image src="../images/players/jdm.png"></iron-image> JDM</div>
+        <div id="playerBar" class="hidden"><iron-image src="../images/players/jdm.png"></iron-image> JDM</div>
         <iron-swipeable-pages selected="{{page}}" attr-for-selected="name">
           <div name="view1">
             <google-youtube id="video1" on-google-youtube-ready="_seekTo" video-id="02I5vVxlJhU" rel="0" start="5" autoplay="1" chromeless fluid>
@@ -188,23 +192,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           video1.seekTo(1220);
       },
 
-      _pageChanged: function() {
-          console.log("changed");
-      },
-
       observers: [
         '_routePageChanged(routeData.page)'
       ],
 
       _routePageChanged: function(page) {
-        console.log("mm");
         this.page = page || 'view1';
       },
 
       _pageChanged: function(page) {
+
+        this._flashPlayerName(page);
         // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
+      },
+
+      _flashPlayerName: function(page) {
+
+        var playerBar = this.$.playerBar;
+        var playerImage = playerBar.querySelector('iron-image');
+        
+        if(page === "view1") {
+          playerImage.src = "../images/players/JDM.png";
+        } else if(page === "view2") {
+          playerImage.src = "../images/players/Hiko.png";
+        } else {
+          playerImage.src = "../images/players/nitro.png";
+        }
+
+        setTimeout(() => {
+          
+        },1000)
       },
 
       _showPage404: function() {
